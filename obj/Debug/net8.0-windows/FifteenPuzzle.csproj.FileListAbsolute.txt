@@ -1,12 +1,12 @@
-C:\Users\Asus\Desktop\КПІ\ООП 2 семестр\FifteenPuzzle\obj\Debug\net8.0-windows\App.g.cs
-C:\Users\Asus\Desktop\КПІ\ООП 2 семестр\FifteenPuzzle\obj\Debug\net8.0-windows\FifteenPuzzle_MarkupCompile.cache
 C:\Users\Asus\Desktop\КПІ\ООП 2 семестр\FifteenPuzzle\bin\Debug\net8.0-windows\FifteenPuzzle.exe
 C:\Users\Asus\Desktop\КПІ\ООП 2 семестр\FifteenPuzzle\bin\Debug\net8.0-windows\FifteenPuzzle.deps.json
 C:\Users\Asus\Desktop\КПІ\ООП 2 семестр\FifteenPuzzle\bin\Debug\net8.0-windows\FifteenPuzzle.runtimeconfig.json
 C:\Users\Asus\Desktop\КПІ\ООП 2 семестр\FifteenPuzzle\bin\Debug\net8.0-windows\FifteenPuzzle.dll
 C:\Users\Asus\Desktop\КПІ\ООП 2 семестр\FifteenPuzzle\bin\Debug\net8.0-windows\FifteenPuzzle.pdb
 C:\Users\Asus\Desktop\КПІ\ООП 2 семестр\FifteenPuzzle\obj\Debug\net8.0-windows\MainWindow.g.cs
+C:\Users\Asus\Desktop\КПІ\ООП 2 семестр\FifteenPuzzle\obj\Debug\net8.0-windows\App.g.cs
 C:\Users\Asus\Desktop\КПІ\ООП 2 семестр\FifteenPuzzle\obj\Debug\net8.0-windows\GeneratedInternalTypeHelper.g.cs
+C:\Users\Asus\Desktop\КПІ\ООП 2 семестр\FifteenPuzzle\obj\Debug\net8.0-windows\FifteenPuzzle_MarkupCompile.cache
 C:\Users\Asus\Desktop\КПІ\ООП 2 семестр\FifteenPuzzle\obj\Debug\net8.0-windows\FifteenPuzzle_MarkupCompile.lref
 C:\Users\Asus\Desktop\КПІ\ООП 2 семестр\FifteenPuzzle\obj\Debug\net8.0-windows\MainWindow.baml
 C:\Users\Asus\Desktop\КПІ\ООП 2 семестр\FifteenPuzzle\obj\Debug\net8.0-windows\FifteenPuzzle.g.resources
@@ -14,6 +14,7 @@ C:\Users\Asus\Desktop\КПІ\ООП 2 семестр\FifteenPuzzle\obj\Debug\net
 C:\Users\Asus\Desktop\КПІ\ООП 2 семестр\FifteenPuzzle\obj\Debug\net8.0-windows\FifteenPuzzle.AssemblyInfoInputs.cache
 C:\Users\Asus\Desktop\КПІ\ООП 2 семестр\FifteenPuzzle\obj\Debug\net8.0-windows\FifteenPuzzle.AssemblyInfo.cs
 C:\Users\Asus\Desktop\КПІ\ООП 2 семестр\FifteenPuzzle\obj\Debug\net8.0-windows\FifteenPuzzle.csproj.CoreCompileInputs.cache
+C:\Users\Asus\Desktop\КПІ\ООП 2 семестр\FifteenPuzzle\obj\Debug\net8.0-windows\FifteenPuzzle.sourcelink.json
 C:\Users\Asus\Desktop\КПІ\ООП 2 семестр\FifteenPuzzle\obj\Debug\net8.0-windows\FifteenPuzzle.dll
 C:\Users\Asus\Desktop\КПІ\ООП 2 семестр\FifteenPuzzle\obj\Debug\net8.0-windows\refint\FifteenPuzzle.dll
 C:\Users\Asus\Desktop\КПІ\ООП 2 семестр\FifteenPuzzle\obj\Debug\net8.0-windows\FifteenPuzzle.pdb
