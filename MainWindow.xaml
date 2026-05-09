@@ -1,0 +1,315 @@
+<Window x:Class="FifteenPuzzle.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:FifteenPuzzle"
+        Title="15 Puzzle"
+        MinWidth="420" MinHeight="560"
+        Width="520" Height="640"
+        Background="{DynamicResource BgBrush}"
+        WindowStartupLocation="CenterScreen"
+        FontFamily="Segoe UI">
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Resource Dictionary — colours, converters, shared styles
+    ════════════════════════════════════════════════════════════════════════ -->
+    <Window.Resources>
+
+        <!-- ── Palette ──────────────────────────────────────────────── -->
+        <Color x:Key="ColBg">#1A1A2E</Color>
+        <Color x:Key="ColSurface">#16213E</Color>
+        <Color x:Key="ColAccent">#0F3460</Color>
+        <Color x:Key="ColHighlight">#E94560</Color>
+        <Color x:Key="ColTile">#0F3460</Color>
+        <Color x:Key="ColTileHover">#1A5276</Color>
+        <Color x:Key="ColTileText">#E0E6F0</Color>
+        <Color x:Key="ColBlank">#0D1B2A</Color>
+        <Color x:Key="ColSolverTile">#F39C12</Color>
+
+        <SolidColorBrush x:Key="BgBrush"        Color="{StaticResource ColBg}"/>
+        <SolidColorBrush x:Key="SurfaceBrush"   Color="{StaticResource ColSurface}"/>
+        <SolidColorBrush x:Key="AccentBrush"     Color="{StaticResource ColAccent}"/>
+        <SolidColorBrush x:Key="HighlightBrush"  Color="{StaticResource ColHighlight}"/>
+        <SolidColorBrush x:Key="TileBrush"       Color="{StaticResource ColTile}"/>
+        <SolidColorBrush x:Key="TileTextBrush"   Color="{StaticResource ColTileText}"/>
+        <SolidColorBrush x:Key="BlankBrush"      Color="{StaticResource ColBlank}"/>
+        <SolidColorBrush x:Key="SolverBrush"     Color="{StaticResource ColSolverTile}"/>
+
+        <!-- ── Converters ──────────────────────────────────────────── -->
+        <local:BoolToVisConverter x:Key="BoolToVis"/>
+        <local:InverseBoolToVisConverter x:Key="InvBoolToVis"/>
+        <local:TileBackgroundConverter x:Key="TileBgConv"/>
+        <local:TileFontSizeConverter x:Key="TileFontSizeConv"/>
+        <local:BestResultConverter x:Key="BestResultConv"/>
+
+        <!-- ── Button style ────────────────────────────────────────── -->
+        <Style x:Key="ActionButton" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TileTextBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="14,8"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource HighlightBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ── Solve / Stop button (orange accent) ────────────────── -->
+        <Style x:Key="SolveButton" TargetType="Button" BasedOn="{StaticResource ActionButton}">
+            <Setter Property="Background" Value="#C0392B"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#E74C3C"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- ── ComboBox style ──────────────────────────────────────── -->
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TileTextBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TileTextBrush}"/>
+        </Style>
+
+    </Window.Resources>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Root grid — scales content uniformly
+    ════════════════════════════════════════════════════════════════════════ -->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>   <!-- header / title -->
+            <RowDefinition Height="Auto"/>   <!-- controls bar -->
+            <RowDefinition Height="*"/>      <!-- puzzle board -->
+            <RowDefinition Height="Auto"/>   <!-- status bar -->
+        </Grid.RowDefinitions>
+
+        <!-- ── Header ─────────────────────────────────────────────────── -->
+        <Border Grid.Row="0" Background="{StaticResource SurfaceBrush}"
+                Padding="20,16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Title -->
+                <StackPanel Grid.Column="0" Orientation="Vertical">
+                    <TextBlock Text="15 PUZZLE"
+           FontSize="26" FontWeight="Bold"
+           Foreground="{StaticResource HighlightBrush}"/>
+                    <TextBlock Text="Sliding Tile Challenge"
+                               FontSize="11" Foreground="#88AABB"
+                               Margin="0,2,0,0"/>
+                </StackPanel>
+
+                <!-- Move + Best counters -->
+                <StackPanel Grid.Column="1" Orientation="Vertical"
+                            HorizontalAlignment="Right">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="MOVES " Foreground="#88AABB" FontSize="11"
+                                   VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding MoveCount}"
+                                   Foreground="{StaticResource HighlightBrush}"
+                                   FontSize="22" FontWeight="Bold"/>
+                    </StackPanel>
+                    <TextBlock HorizontalAlignment="Right" FontSize="11" Foreground="#88AABB"
+                               Text="{Binding BestResult, Converter={StaticResource BestResultConv}}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ── Controls bar ───────────────────────────────────────────── -->
+        <Border Grid.Row="1" Background="{StaticResource AccentBrush}"
+                Padding="14,10">
+            <WrapPanel Orientation="Horizontal"
+                       HorizontalAlignment="Center"
+                       ItemHeight="34">
+
+                <!-- Grid size selector -->
+                <StackPanel Orientation="Horizontal" Margin="0,0,10,0"
+                            VerticalAlignment="Center">
+                    <TextBlock Text="Size:" Foreground="{StaticResource TileTextBrush}"
+                               VerticalAlignment="Center" Margin="0,0,6,0" FontSize="13"/>
+                    <ComboBox Width="60"
+                              ItemsSource="{Binding AvailableSizes}"
+                              SelectedItem="{Binding SelectedSize, Mode=TwoWay}"
+                              IsEnabled="{Binding CanInteract}"/>
+                </StackPanel>
+                <!-- How to play -->
+                <Button Content="❓ Help"
+                        Command="{Binding ShowRulesCommand}"
+                        Style="{StaticResource ActionButton}"
+                        Margin="4,0" Height="34"/>
+
+                <!-- New Game -->
+                <Button Content="🔀  New Game"
+                        Command="{Binding NewGameCommand}"
+                        Style="{StaticResource ActionButton}"
+                        Margin="4,0" Height="34"/>
+
+                <!-- Save / Load -->
+                <Button Content="💾  Save"
+                        Command="{Binding SaveGameCommand}"
+                        Style="{StaticResource ActionButton}"
+                        IsEnabled="{Binding CanInteract}"
+                        Margin="4,0" Height="34"/>
+
+                <Button Content="📂  Load"
+                        Command="{Binding LoadGameCommand}"
+                        Style="{StaticResource ActionButton}"
+                        IsEnabled="{Binding CanInteract}"
+                        Margin="4,0" Height="34"/>
+
+                <!-- Solve / Stop -->
+                <Button Content="Solve"
+                        Command="{Binding SolveCommand}"
+                        Style="{StaticResource SolveButton}"
+                        Visibility="{Binding IsSolverRunning, Converter={StaticResource InvBoolToVis}}"
+                        Margin="4,0" Height="34"/>
+
+                <Button Content="⏹  Stop"
+                        Command="{Binding StopSolverCommand}"
+                        Style="{StaticResource SolveButton}"
+                        Visibility="{Binding IsSolverRunning, Converter={StaticResource BoolToVis}}"
+                        Margin="4,0" Height="34"/>
+            </WrapPanel>
+        </Border>
+
+        <!-- ── Puzzle board area ───────────────────────────────────────── -->
+        <Grid Grid.Row="2" Margin="24">
+
+            <!-- Responsive scaling: ViewBox stretches the grid uniformly -->
+            <Viewbox Stretch="Uniform">
+                <ItemsControl x:Name="PuzzleGrid"
+                              ItemsSource="{Binding TileVMs}"
+                              Width="400" Height="400">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <!-- Columns updated from code-behind when size changes -->
+                            <UniformGrid x:Name="TileUniformGrid"
+                                         Columns="{Binding SelectedSize}"
+                                         Rows="{Binding SelectedSize}"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <!-- ── Tile data template ─────────────────────────────── -->
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type local:TileViewModel}">
+                            <Button Margin="3"
+                                    Command="{Binding DataContext.MoveTileCommand,
+                                              RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                    CommandParameter="{Binding Value}"
+                                    IsEnabled="{Binding DataContext.CanInteract,
+                                               RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                    Cursor="Hand">
+                                <Button.Background>
+                                    <MultiBinding Converter="{StaticResource TileBgConv}">
+                                        <Binding Path="IsBlank"/>
+                                        <Binding Path="IsHighlighted"/>
+                                    </MultiBinding>
+                                </Button.Background>
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                CornerRadius="10"
+                                                BorderBrush="#2A5080"
+                                                BorderThickness="1.5">
+                                            <Border.Effect>
+                                                <DropShadowEffect ShadowDepth="3" BlurRadius="6"
+                                                                  Color="#000000" Opacity="0.35"/>
+                                            </Border.Effect>
+                                            <ContentPresenter HorizontalAlignment="Center"
+                                                              VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#1A5276"/>
+                                            </Trigger>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter Property="Background" Value="{StaticResource HighlightBrush}"/>
+                                            </Trigger>
+                                            <DataTrigger Binding="{Binding IsBlank}" Value="True">
+                                                <Setter Property="IsEnabled" Value="False"/>
+                                            </DataTrigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                                <TextBlock Text="{Binding DisplayText}"
+                                           Foreground="{StaticResource TileTextBrush}"
+                                           FontWeight="Bold"
+                                           FontSize="{Binding DataContext.SelectedSize,
+                                                     RelativeSource={RelativeSource AncestorType=ItemsControl},
+                                                     Converter={StaticResource TileFontSizeConv}}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Viewbox>
+
+            <!-- ── Victory overlay ────────────────────────────────────── -->
+            <Border Background="#CC1A1A2E" CornerRadius="16"
+                    Visibility="{Binding IsVictory, Converter={StaticResource BoolToVis}}">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Margin="32">
+                    <TextBlock Text="🎉" FontSize="64"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="PUZZLE SOLVED!"
+                               FontSize="28" FontWeight="Bold"
+                               Foreground="{StaticResource HighlightBrush}"
+                               HorizontalAlignment="Center" Margin="0,8"/>
+                    <TextBlock HorizontalAlignment="Center"
+                               Foreground="{StaticResource TileTextBrush}"
+                               FontSize="16">
+                        <Run Text="Completed in "/>
+                        <Run Text="{Binding MoveCount, Mode=OneWay}" FontWeight="Bold"
+                             Foreground="{StaticResource HighlightBrush}"/>
+                        <Run Text=" moves"/>
+                    </TextBlock>
+                    <Button Content="Play Again"
+                            Command="{Binding NewGameCommand}"
+                            Style="{StaticResource ActionButton}"
+                            FontSize="15" Margin="0,20,0,0"
+                            Padding="24,10"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- ── Status bar ─────────────────────────────────────────────── -->
+        <Border Grid.Row="3" Background="{StaticResource SurfaceBrush}"
+                Padding="16,8">
+            <TextBlock Text="{Binding StatusMessage}"
+                       Foreground="#88AABB"
+                       FontSize="12"
+                       HorizontalAlignment="Center"
+                       TextTrimming="CharacterEllipsis"/>
+        </Border>
+    </Grid>
+</Window>
