@@ -257,7 +257,13 @@ namespace FifteenPuzzle
             int idx = 0;
             for (int r = 0; r < size; r++)
                 for (int c = 0; c < size; c++)
-                    TileVMs[idx++].Value = _board.Tiles[r, c].Value;
+                {
+                    // Обновляем цифру
+                    TileVMs[idx].Value = _board.Tiles[r, c].Value;
+                    // ПРИНУДИТЕЛЬНО СБРАСЫВАЕМ ЦВЕТ
+                    TileVMs[idx].IsHighlighted = false;
+                    idx++;
+                }
         }
 
         // ─────────────────────────────────────────────────────────────────────

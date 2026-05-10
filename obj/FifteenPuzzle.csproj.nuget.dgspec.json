@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Asus\\Desktop\\КПІ\\ООП 2 семестр\\FifteenPuzzle\\FifteenPuzzle.csproj": {}
+    "c:\\Users\\Asus\\Desktop\\КПІ\\ООП 2 семестр\\FifteenPuzzle\\FifteenPuzzle.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Asus\\Desktop\\КПІ\\ООП 2 семестр\\FifteenPuzzle\\FifteenPuzzle.csproj": {
+    "c:\\Users\\Asus\\Desktop\\КПІ\\ООП 2 семестр\\FifteenPuzzle\\FifteenPuzzle.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Asus\\Desktop\\КПІ\\ООП 2 семестр\\FifteenPuzzle\\FifteenPuzzle.csproj",
+        "projectUniqueName": "c:\\Users\\Asus\\Desktop\\КПІ\\ООП 2 семестр\\FifteenPuzzle\\FifteenPuzzle.csproj",
         "projectName": "FifteenPuzzle",
-        "projectPath": "C:\\Users\\Asus\\Desktop\\КПІ\\ООП 2 семестр\\FifteenPuzzle\\FifteenPuzzle.csproj",
+        "projectPath": "c:\\Users\\Asus\\Desktop\\КПІ\\ООП 2 семестр\\FifteenPuzzle\\FifteenPuzzle.csproj",
         "packagesPath": "C:\\Users\\Asus\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Asus\\Desktop\\КПІ\\ООП 2 семестр\\FifteenPuzzle\\obj\\",
+        "outputPath": "c:\\Users\\Asus\\Desktop\\КПІ\\ООП 2 семестр\\FifteenPuzzle\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Asus\\AppData\\Roaming\\NuGet\\NuGet.Config"
